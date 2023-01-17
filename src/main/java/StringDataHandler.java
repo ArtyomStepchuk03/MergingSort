@@ -51,45 +51,59 @@ public class StringDataHandler {
         List<String> data = new ArrayList<>();
         collect(readers, data);
 
-        save(dataSorter.sortString(data));
+        checkDataAndSave(dataSorter.sortString(data));
 
         return sortAndSave(readers);
     }
 
-//    private void save(List<String> data) throws IOException { // TODO cut this method
-//        if(currentData.isEmpty()) currentData.addAll(data);
-//        else {
-//            if(data == null) writeInFile(currentData);
-//            else checkDataAndWrite(data);
-//        }
-//    }
-
-    private void save(List<String> data) throws IOException {
+    private void checkDataAndSave(List<String> data) throws IOException {
+        if(flag) {
+            writeInFile(currentData);
+        }
         if(data != null) {
-            if(currentData.isEmpty()) {
+            System.out.println("DATA: " + data + currentData);
+//            writeInFile(data);
+            if(currentData.isEmpty())
                 currentData.addAll(data);
-                writeInFile(data);
-            } else {
-                checkDataAndWrite(data);
-//                writeInFile(currentData);
-                currentData.clear();
+            else {
+                int indexLast = currentData.size()-1;
+                if(currentData.get(indexLast).compareTo(data.get(0)) > 0 == dataSorter.sortMode()) {
+                    repeatSorting(data);
+                } else {
+                    currentData.addAll(data);
+                    writeInFile(currentData);
+                }
             }
         }
-    }
 
-    private void checkDataAndWrite(List<String> data) throws IOException {
-        if(flag) writeInFile(currentData);
-        if(invalidSortedFlag) repeatSorting(data);
-        else {
-            int indexOfLastItem = currentData.size()-1;
-            if(((currentData.get(indexOfLastItem).compareTo(data.get(0)) <= 0) != dataSorter.sortMode())) {
-                repeatSorting(data);
-                invalidSortedFlag = true;
-            } else {
-                writeInFile(data);
-                currentData.clear();
-            }
-        }
+
+
+
+
+
+
+
+//        if(data != null) {
+//            if(currentData.isEmpty()) {
+//                currentData.addAll(data);
+////                writeInFile(data);
+//            } else {
+//                if(flag) writeInFile(currentData);
+//
+//                int indexOfLastItem = currentData.size()-1;
+//                if(((currentData.get(indexOfLastItem).compareTo(data.get(0)) <= 0) != dataSorter.sortMode())) {
+//                    repeatSorting(data);
+//                    writeInFile(currentData);
+//                    currentData.clear();
+//                    currentData.addAll(data);
+//                } else {
+//                    writeInFile(currentData);
+//                    currentData.clear();
+//                    writeInFile(data);
+//                    currentData.addAll(data);
+//                }
+//            }
+//        }
     }
 
     private void repeatSorting(List<String> data) {

@@ -18,26 +18,27 @@ public record DataSorter(boolean sortMode) {
         int positionRight = 0, positionLeft = 0;
 
         for (int i = 0; i < firstSize + secondSize; i++) {
-            if (positionLeft == firstSize) {
-                try {
+            String left;
+            String right;
+            try {
+                left = first.get(positionLeft);
+            } catch (IndexOutOfBoundsException e) {
+                while (positionRight < secondSize) {
                     result.add(second.get(positionRight));
                     positionRight++;
-                    continue;
-                } catch (IndexOutOfBoundsException e) {
-                    return result;
                 }
+                return result;
             }
-            if (positionRight == secondSize) {
-                try {
+
+            try {
+                right = second.get(positionRight);
+            } catch (IndexOutOfBoundsException e) {
+                while (positionLeft < firstSize) {
                     result.add(first.get(positionLeft));
                     positionLeft++;
-                    continue;
-                } catch (IndexOutOfBoundsException e) {
-                    return result;
                 }
+                return result;
             }
-            String left = first.get(positionLeft);
-            String right = second.get(positionRight);
 
             try {
                 if (left.compareTo(right) > 0 == sortMode) {
@@ -49,7 +50,6 @@ public record DataSorter(boolean sortMode) {
                 }
             } catch (NullPointerException ignored) {}
         }
-        System.out.println("Проходка");
         return result;
     }
 
@@ -126,6 +126,8 @@ public record DataSorter(boolean sortMode) {
         for (int i = 0; i < half; i++) first.add(list.get(i));
         for (int i = half; i < size; i++) second.add(list.get(i));
 
+        if(first.isEmpty() && second.isEmpty())
+            return null;
         return mergeString(sortString(first), sortString(second));
     }
 
