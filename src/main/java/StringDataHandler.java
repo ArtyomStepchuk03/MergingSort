@@ -15,6 +15,8 @@ public class StringDataHandler {
     private List<String> currentData = new ArrayList<>();
     private int filesQuantity;
 
+    private String lastItem;
+
     public StringDataHandler(List<String> incomingFiles, DataSorter dataSorter, String resultName) {
         this.resultName = resultName;
         this.incomingFiles = incomingFiles;
@@ -46,10 +48,13 @@ public class StringDataHandler {
     }
     // TODO Rename methods
     private List<String> sortAndSave(List<BufferedReader> readers) throws IOException {
-        if(flag) return null;
-
         List<String> data = new ArrayList<>();
         collect(readers, data);
+
+        if(flag) {
+            writeInFile(currentData);
+            return null;
+        }
 
         checkDataAndSave(dataSorter.sortString(data));
 
@@ -57,53 +62,20 @@ public class StringDataHandler {
     }
 
     private void checkDataAndSave(List<String> data) throws IOException {
-        if(flag) {
-            writeInFile(currentData);
+        if(currentData.isEmpty()) {
+            currentData.addAll(data);
+            lastItem = currentData.get(filesQuantity-1);
         }
-        if(data != null) {
-            System.out.println("DATA: " + data + currentData);
-//            writeInFile(data);
-            if(currentData.isEmpty())
+        else {
+            if(lastItem.compareTo(data.get(0)) > 0 == dataSorter.sortMode()) {
+                repeatSorting(data);
+                lastItem = data.get(filesQuantity-1);
+            } else {
                 currentData.addAll(data);
-            else {
-                int indexLast = currentData.size()-1;
-                if(currentData.get(indexLast).compareTo(data.get(0)) > 0 == dataSorter.sortMode()) {
-                    repeatSorting(data);
-                } else {
-                    currentData.addAll(data);
-                    writeInFile(currentData);
-                }
+                writeInFile(currentData);
+                currentData.clear();
             }
         }
-
-
-
-
-
-
-
-
-//        if(data != null) {
-//            if(currentData.isEmpty()) {
-//                currentData.addAll(data);
-////                writeInFile(data);
-//            } else {
-//                if(flag) writeInFile(currentData);
-//
-//                int indexOfLastItem = currentData.size()-1;
-//                if(((currentData.get(indexOfLastItem).compareTo(data.get(0)) <= 0) != dataSorter.sortMode())) {
-//                    repeatSorting(data);
-//                    writeInFile(currentData);
-//                    currentData.clear();
-//                    currentData.addAll(data);
-//                } else {
-//                    writeInFile(currentData);
-//                    currentData.clear();
-//                    writeInFile(data);
-//                    currentData.addAll(data);
-//                }
-//            }
-//        }
     }
 
     private void repeatSorting(List<String> data) {

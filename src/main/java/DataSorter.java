@@ -111,34 +111,31 @@ public record DataSorter(boolean sortMode) {
 
 
     public List<String> sortString(List<String> list) {
-        if (list == null)
-            return null;
+        if (list == null) return null;
 
         int size = list.size();
 
-        if (size == 1)
-            return list;
+        if (size == 1) return list;
 
         int half = size / 2;
 
         List<String> first = new ArrayList<>();
         List<String> second = new ArrayList<>();
+
         for (int i = 0; i < half; i++) first.add(list.get(i));
         for (int i = half; i < size; i++) second.add(list.get(i));
 
-        if(first.isEmpty() && second.isEmpty())
-            return null;
+        if(first.isEmpty() && second.isEmpty()) return null;
+
         return mergeString(sortString(first), sortString(second));
     }
 
     public int[] sortInt(int[] list) {
-        if (list == null)
-            return null;
+        if (list == null) return null;
 
         int size = list.length;
 
-        if (size == 1)
-            return list;
+        if (size == 1) return list;
 
         int half = size / 2;
 
