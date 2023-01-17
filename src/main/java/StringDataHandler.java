@@ -64,12 +64,12 @@ public class StringDataHandler {
     private void checkDataAndSave(List<String> data) throws IOException {
         if(currentData.isEmpty()) {
             currentData.addAll(data);
-            lastItem = currentData.get(filesQuantity-1);
+            lastItem = currentData.get(data.size()-1);
         }
         else {
             if(lastItem.compareTo(data.get(0)) > 0 == dataSorter.sortMode()) {
                 repeatSorting(data);
-                lastItem = data.get(filesQuantity-1);
+                lastItem = currentData.get(currentData.size()-1);
             } else {
                 currentData.addAll(data);
                 writeInFile(currentData);
