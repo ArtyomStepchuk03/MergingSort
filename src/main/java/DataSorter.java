@@ -53,7 +53,7 @@ public record DataSorter(boolean sortMode) {
         return result;
     }
 
-    private int[] mergeInt(int[] first, int[] second) {
+    private List<Integer> mergeInteger(List<Integer> first, List<Integer> second) {
         if (first == null || second == null) {
             try {
                 return second;
@@ -62,53 +62,46 @@ public record DataSorter(boolean sortMode) {
             }
         }
 
-        int firstSize = first.length;
-        int secondSize = second.length;
-        int[] result = new int[firstSize + secondSize];
+        List<Integer> result = new ArrayList<>();
+        int firstSize = first.size();
+        int secondSize = second.size();
         int positionRight = 0, positionLeft = 0;
 
-        // TODO добавить проверку каждой строчки на вместимть int
-
-        for (int i = 0; i < result.length; i++) {
-            if (positionLeft == firstSize) {
-                try {
-                    result[i] = second[positionRight];
+        for (int i = 0; i < firstSize + secondSize; i++) {
+            Integer left;
+            Integer right;
+            try {
+                left = first.get(positionLeft);
+            } catch (IndexOutOfBoundsException e) {
+                while (positionRight < secondSize) {
+                    result.add(second.get(positionRight));
                     positionRight++;
-                    continue;
-                } catch (IndexOutOfBoundsException e) {
-                    return result;
                 }
+                return result;
             }
-            if (positionRight == secondSize) {
-                try {
-                    result[i] = first[positionLeft];
+
+            try {
+                right = second.get(positionRight);
+            } catch (IndexOutOfBoundsException e) {
+                while (positionLeft < firstSize) {
+                    result.add(first.get(positionLeft));
                     positionLeft++;
-                    continue;
-                } catch (IndexOutOfBoundsException e) {
-                    return result;
                 }
-            }
-            int left = first[positionLeft];
-            int right = second[positionRight];
-
-            if (left > right == sortMode) {
-                result[i] = right;
-                positionRight++;
-            } else {
-                result[i] = left;
-                positionLeft++;
+                return result;
             }
 
+            try {
+                if (left > right == sortMode) {
+                    result.add(right);
+                    positionRight++;
+                } else {
+                    result.add(left);
+                    positionLeft++;
+                }
+            } catch (NullPointerException ignored) {}
         }
         return result;
     }
-
-
-
-
-
-
-
 
     public List<String> sortString(List<String> list) {
         if (list == null) return null;
@@ -130,21 +123,23 @@ public record DataSorter(boolean sortMode) {
         return mergeString(sortString(first), sortString(second));
     }
 
-    public int[] sortInt(int[] list) {
+    public List<Integer> sortInteger(List<Integer> list) {
         if (list == null) return null;
 
-        int size = list.length;
+        int size = list.size();
 
         if (size == 1) return list;
 
         int half = size / 2;
 
-        int[] first = new int[half];
-        int[] second = new int[size - half];
+        List<Integer> first = new ArrayList<>();
+        List<Integer> second = new ArrayList<>();
 
-        System.arraycopy(list, 0, first, 0, half);
-        System.arraycopy(list, half, second, 0, size - half);
+        for (int i = 0; i < half; i++) first.add(list.get(i));
+        for (int i = half; i < size; i++) second.add(list.get(i));
 
-        return mergeInt(sortInt(first), sortInt(second));
+        if(first.isEmpty() && second.isEmpty()) return null;
+
+        return mergeInteger(sortInteger(first), sortInteger(second));
     }
 }

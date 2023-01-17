@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    public static String DEFAULT_FILE_PATH = "C:\\Work\\TestTasks\\TestTask\\src\\main\\";
     public static UserController userController = new UserController();
     public static void main(String... args) throws IOException {
 //        UserController userController = new UserController();
@@ -23,7 +24,9 @@ public class Main {
 //        bufferedWriter.write("dsfsc");
 //        bufferedWriter.close();
 
-        StringDataHandler dataHandler = new StringDataHandler(list, dataSorter, "file.txt");
-        dataHandler.process();
+        if(userController.getDataType()) {
+            IntegerDataHandler dataHandler = new IntegerDataHandler(list, dataSorter, "file.txt");
+            dataHandler.process();
+        }
     }
 }

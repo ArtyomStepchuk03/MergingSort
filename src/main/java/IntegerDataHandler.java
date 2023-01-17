@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringDataHandler {
+public class IntegerDataHandler {
     private final String resultName;
     private final List<String> incomingFiles;
 
@@ -10,20 +10,18 @@ public class StringDataHandler {
 
     private BufferedWriter resultWriter;
     private boolean flag = false; // Is true when all files are looked
-    private List<String> currentData = new ArrayList<>();
+    private List<Integer> currentData = new ArrayList<>();
     private int filesQuantity;
 
-    private String lastItem;
+    private Integer lastItem;
 
-    public StringDataHandler(List<String> incomingFiles, DataSorter dataSorter, String resultName) {
+    public IntegerDataHandler(List<String> incomingFiles, DataSorter dataSorter, String resultName) {
         this.resultName = resultName;
         this.incomingFiles = incomingFiles;
         this.dataSorter = dataSorter;
     }
 
     public void process() throws IOException {
-        compareDataTypes(findFiles(incomingFiles), Main.userController.getDataType());
-
         resultWriter = new BufferedWriter(new FileWriter(Main.DEFAULT_FILE_PATH + resultName));
 
         sortAndSave(findFiles(incomingFiles));
@@ -31,13 +29,13 @@ public class StringDataHandler {
         resultWriter.close();
     }
 
-    public List<String> collect(List<BufferedReader> readers, List<String> data) throws IOException {
+    public List<Integer> collect(List<BufferedReader> readers, List<Integer> data) throws IOException {
         int nullCount = 0;
         for(BufferedReader reader : readers) {
             String line = reader.readLine();
             try {
                 if(line == null) nullCount++;
-                else if(!line.contains(" ")) data.add(line);
+                else if(!line.contains(" ")) data.add(Integer.valueOf(line));
             } catch (OutOfMemoryError error) {
                 System.out.println("Слишком большой объём строки. Файл не может быть обработан!");
             }
@@ -52,8 +50,8 @@ public class StringDataHandler {
         return data;
     }
 
-    public List<String> sortAndSave(List<BufferedReader> readers) throws IOException {
-        List<String> data = new ArrayList<>();
+    public List<Integer> sortAndSave(List<BufferedReader> readers) throws IOException {
+        List<Integer> data = new ArrayList<>();
         collect(readers, data);
 
         if(flag) {
@@ -61,7 +59,7 @@ public class StringDataHandler {
             return null;
         }
 
-        save(dataSorter.sortString(data));
+        save(dataSorter.sortInteger(data));
 
         return sortAndSave(readers);
     }
@@ -82,7 +80,7 @@ public class StringDataHandler {
         return bufferedReaders;
     }
 
-    private void save(List<String> data) throws IOException {
+    private void save(List<Integer> data) throws IOException {
         if(currentData.isEmpty()) {
             currentData.addAll(data);
             lastItem = currentData.get(data.size()-1);
@@ -90,7 +88,7 @@ public class StringDataHandler {
         else {
             if(lastItem.compareTo(data.get(0)) > 0 == dataSorter.sortMode()) {
                 currentData.addAll(data);
-                currentData = dataSorter.sortString(currentData);
+                currentData = dataSorter.sortInteger(currentData);
                 lastItem = currentData.get(currentData.size()-1);
             } else {
                 currentData.addAll(data);
@@ -100,24 +98,10 @@ public class StringDataHandler {
         }
     }
 
-    private void write(List<String> strings) throws IOException {
-        for(String string : strings) {
-            resultWriter.write(string);
+    private void write(List<Integer> data) throws IOException {
+        for(Integer integer : data) {
+            resultWriter.write(integer);
             resultWriter.newLine();
-        }
-    }
-
-    private void compareDataTypes(List<BufferedReader> readers, boolean dataType) throws IOException {
-        boolean isDigit = true;
-        for(BufferedReader reader : readers) {
-            String line = reader.readLine();
-            for (int i = 0; i < line.length(); i++) {
-                if(!Character.isDigit(line.charAt(i)))
-                    isDigit = false;
-            }
-        }
-        if(isDigit != dataType) {
-            System.out.println("Выбран неверный тип данных!");
         }
     }
 }
