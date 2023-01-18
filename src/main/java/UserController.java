@@ -89,10 +89,6 @@ public class UserController {
         return dataType;
     }
 
-    public void setDataType(boolean dataType) {
-        this.dataType = dataType;
-    }
-
     public String getResultName() {
         return resultName;
     }
