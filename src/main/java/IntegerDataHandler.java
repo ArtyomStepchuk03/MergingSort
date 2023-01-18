@@ -104,16 +104,14 @@ public class IntegerDataHandler {
 
     private void write(List<Integer> data) throws IOException {
         for(Integer integer : data) {
-            resultWriter.write(integer);
+            resultWriter.write(String.valueOf(integer));
             resultWriter.newLine();
         }
     }
 
     private void invalidTypeException() {
         if(!Main.userController.invalidDataType) {
-            System.out.println("Не все строки состоят из чисел! Все числа будут удалены! Продолжить?");
-            Main.userController.invalidDataType = Main.userController.completeSorting();
-            System.out.println("Все числа будут удалены!");
+            System.out.println("Не все строки состоят из чисел! Все слова будут удалены!");
         }
     }
 }

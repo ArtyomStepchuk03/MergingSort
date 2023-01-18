@@ -36,7 +36,7 @@ public class StringDataHandler {
                 if(line == null) nullCount++;
                 else if(!line.contains(" ")) data.add(line);
             } catch (OutOfMemoryError error) {
-                System.out.println("Слишком большой объём строки. Файл не может быть обработан!");
+                System.out.println("Слишком большой объём строки! Файл не может быть обработан! Строка будет удалена.");
             }
         }
         int size = data.size();
@@ -71,7 +71,7 @@ public class StringDataHandler {
             try {
                 bufferedReaders.add(new BufferedReader(new FileReader(Main.DEFAULT_FILE_PATH + name)));
             } catch (FileNotFoundException e) {
-                System.out.println("Введено неверное название файла! Попробуйте ещё раз: ");
+                System.out.println("Введено неверное название файла " + name + "! Попробуйте ещё раз: ");
                 System.out.println();
                 return findFiles(Main.userController.getFileNames());
             }
