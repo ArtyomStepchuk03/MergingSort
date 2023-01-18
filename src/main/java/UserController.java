@@ -6,32 +6,33 @@ public class UserController {
 
     private boolean sortMode;     // True = -a, False = -d
     private boolean dataType;     // True = -i, False = -s
-    private String replyName;     // The name of final file
-    private List<String> fileNames;     // Names of initial files
+    private String resultName;     // The name of final file
+    private List<String> fileNames;     // Names of initiated files
+    public boolean invalidSortedFile;     // Flag: true, when file was sorted incorrectly
 
-    public void collectUserData() {
+    public void getParams() {
         sortMode = requestSortMode();
         dataType = requestDataType();
-        replyName = requestReplyName();
+        resultName = requestResultName();
         fileNames = requestFiles();
     }
 
-    private boolean requestSortMode() {
+    public boolean requestSortMode() {
         return scannerQuery("Выберите режим сортировки: -a или -d, где -a - по возрастанию, -d - по убыванию, или введите команду @skip, чтобы применить тип сортировки по умолчанию:",
                 "-a", "-d");
     }
 
-    private boolean requestDataType() {
+    public boolean requestDataType() {
         return scannerQuery("Выберите тип данных: -s или -i, где -s - строки, -i - числа: ",
                 "-i", "-s");
     }
 
-    private String requestReplyName() {
+    public String requestResultName() {
         System.out.println("Введите название отсортированного файла с разрешением: ");
         return scanner.next();
     }
 
-    private List<String> requestFiles() {
+    public List<String> requestFiles() {
         System.out.println("Введите названия обрабатываемых файлов с разрешением и команду \"@start\", чтобы начать сортировку: ");
         List<String> introducedFiles = new ArrayList<>();
         while(scanner.hasNext()) {
@@ -88,8 +89,12 @@ public class UserController {
         return dataType;
     }
 
-    public String getReplyName() {
-        return replyName;
+    public void setDataType(boolean dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getResultName() {
+        return resultName;
     }
 
     public List<String> getFileNames() {

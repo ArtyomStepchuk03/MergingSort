@@ -6,8 +6,6 @@ public class IntegerDataHandler {
     private final String resultName;
     private final List<String> incomingFiles;
 
-    private final DataSorter dataSorter;
-
     private BufferedWriter resultWriter;
     private boolean flag = false; // Is true when all files are looked
     private List<Integer> currentData = new ArrayList<>();
@@ -15,10 +13,9 @@ public class IntegerDataHandler {
 
     private Integer lastItem;
 
-    public IntegerDataHandler(List<String> incomingFiles, DataSorter dataSorter, String resultName) {
+    public IntegerDataHandler(List<String> incomingFiles, String resultName) {
         this.resultName = resultName;
         this.incomingFiles = incomingFiles;
-        this.dataSorter = dataSorter;
     }
 
     public void process() throws IOException {
@@ -32,12 +29,18 @@ public class IntegerDataHandler {
     public List<Integer> collect(List<BufferedReader> readers, List<Integer> data) throws IOException {
         int nullCount = 0;
         for(BufferedReader reader : readers) {
-            String line = reader.readLine();
             try {
+                String line = reader.readLine();
                 if(line == null) nullCount++;
-                else if(!line.contains(" ")) data.add(Integer.valueOf(line));
+                else if(!line.contains(" ")) {
+                    try{
+                        data.add(Integer.parseInt(line));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Не все строки состоят из чисел! Такие строки будут удалены!");
+                    }
+                }
             } catch (OutOfMemoryError error) {
-                System.out.println("Слишком большой объём строки. Файл не может быть обработан!");
+                System.out.println("Слишком большой объём строки! Файл не может быть обработан! Строка будет удалена.");
             }
         }
         int size = data.size();
@@ -59,7 +62,7 @@ public class IntegerDataHandler {
             return null;
         }
 
-        save(dataSorter.sortInteger(data));
+        save(Main.dataSorter.sortInteger(data));
 
         return sortAndSave(readers);
     }
@@ -73,7 +76,6 @@ public class IntegerDataHandler {
                 bufferedReaders.add(new BufferedReader(new FileReader(Main.DEFAULT_FILE_PATH + name)));
             } catch (FileNotFoundException e) {
                 System.out.println("Введено неверное название файла! Попробуйте ещё раз: ");
-                System.out.println();
                 return findFiles(Main.userController.getFileNames());
             }
         }
@@ -86,9 +88,9 @@ public class IntegerDataHandler {
             lastItem = currentData.get(data.size()-1);
         }
         else {
-            if(lastItem.compareTo(data.get(0)) > 0 == dataSorter.sortMode()) {
+            if(lastItem.compareTo(data.get(0)) > 0 == Main.dataSorter.sortMode()) {
                 currentData.addAll(data);
-                currentData = dataSorter.sortInteger(currentData);
+                currentData = Main.dataSorter.sortInteger(currentData);
                 lastItem = currentData.get(currentData.size()-1);
             } else {
                 currentData.addAll(data);
