@@ -36,7 +36,7 @@ public class IntegerDataHandler {
                     try{
                         data.add(Integer.parseInt(line));
                     } catch (NumberFormatException e) {
-                        System.out.println("Не все строки состоят из чисел! Такие строки будут удалены!");
+                        invalidTypeException();
                     }
                 }
             } catch (OutOfMemoryError error) {
@@ -89,6 +89,8 @@ public class IntegerDataHandler {
         }
         else {
             if(lastItem.compareTo(data.get(0)) > 0 == Main.dataSorter.sortMode()) {
+                if(!Main.userController.invalidSortedFile)
+                    Main.userController.invalidSortedFile = Main.userController.completeSorting();
                 currentData.addAll(data);
                 currentData = Main.dataSorter.sortInteger(currentData);
                 lastItem = currentData.get(currentData.size()-1);
@@ -104,6 +106,14 @@ public class IntegerDataHandler {
         for(Integer integer : data) {
             resultWriter.write(integer);
             resultWriter.newLine();
+        }
+    }
+
+    private void invalidTypeException() {
+        if(!Main.userController.invalidDataType) {
+            System.out.println("Не все строки состоят из чисел! Все числа будут удалены! Продолжить?");
+            Main.userController.invalidDataType = Main.userController.completeSorting();
+            System.out.println("Все числа будут удалены!");
         }
     }
 }

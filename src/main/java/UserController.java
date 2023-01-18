@@ -8,7 +8,8 @@ public class UserController {
     private boolean dataType;     // True = -i, False = -s
     private String resultName;     // The name of final file
     private List<String> fileNames;     // Names of initiated files
-    public boolean invalidSortedFile;     // Flag: true, when file was sorted incorrectly
+    public boolean invalidSortedFile = false;     // Flag: true, when file was sorted incorrectly
+    public boolean invalidDataType = false;
 
     public void getParams() {
         sortMode = requestSortMode();
@@ -46,7 +47,10 @@ public class UserController {
     }
 
     public boolean completeSorting() {
-        System.out.println("Ошибка сортировки! Файл предварительно отсортирован неверно! Введите \"y\", чтобы продолжить сортировку (файл будет отсортирован с ошибкой) или \"@finish\", чтобы завершить работу: ");
+        if(dataType)
+            System.out.println("Введите \"y\", чтобы продолжить сортировку (числа будут удалены) или \"@finish\", чтобы завершить работу: ");
+        else
+            System.out.println("Ошибка сортировки! Файл предварительно отсортирован неверно! Введите \"y\", чтобы продолжить сортировку (займёт значительно больше времени) или \"@finish\", чтобы завершить работу: ");
         String line = scanner.next();
 
         if(line.equals("y"))
