@@ -4,7 +4,7 @@ import java.util.List;
 
 public class StringDataHandler {
     private final String resultName;
-    private final List<String> incomingFiles;
+    private List<String> incomingFiles;
 
     private BufferedWriter resultWriter;
     private boolean flag = false; // Is true when all files are looked
@@ -73,7 +73,8 @@ public class StringDataHandler {
             } catch (FileNotFoundException e) {
                 System.out.println("Введено неверное название файла " + name + "! Попробуйте ещё раз: ");
                 System.out.println();
-                return findFiles(Main.userController.requestFiles());
+                incomingFiles = Main.userController.requestFiles();
+                return findFiles(incomingFiles);
             }
         }
         return bufferedReaders;
