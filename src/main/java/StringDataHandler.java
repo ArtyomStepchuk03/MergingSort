@@ -73,7 +73,7 @@ public class StringDataHandler {
             } catch (FileNotFoundException e) {
                 System.out.println("Введено неверное название файла " + name + "! Попробуйте ещё раз: ");
                 System.out.println();
-                return findFiles(Main.userController.getFileNames());
+                return findFiles(Main.userController.requestFiles());
             }
         }
         return bufferedReaders;
