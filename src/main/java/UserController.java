@@ -34,7 +34,9 @@ public class UserController {
     }
 
     public List<String> requestFiles() {
-        fileNames.clear();
+        try {
+            fileNames.clear();
+        } catch (NullPointerException ignored){}
         System.out.println("Введите названия обрабатываемых файлов с разрешением и команду \"@start\", чтобы начать сортировку: ");
         List<String> introducedFiles = new ArrayList<>();
         while(scanner.hasNext()) {
