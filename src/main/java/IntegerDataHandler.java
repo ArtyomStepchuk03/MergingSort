@@ -112,6 +112,7 @@ public class IntegerDataHandler {
     private void invalidTypeException() {
         if(!Main.userController.invalidDataType) {
             System.out.println("Не все строки состоят из чисел! Все слова будут удалены!");
+            Main.userController.invalidDataType = true;
         }
     }
 }
